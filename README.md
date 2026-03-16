@@ -4,6 +4,8 @@ This project implements a portable Digital Twin (implemented in Simulink) that c
 
 ![](./static/main-rec.gif)
 
+![](./static/simulink-model.png)
+
 ## Architecture
 
 - **Digital Twin (MATLAB/Simulink)**: A compiled C++ binary generated in Simulink (with Embedded Coder) that simulates a sine wave generator with UDP input/output blocks.
@@ -31,7 +33,6 @@ The dashboard will be available at `http://localhost:5000`.
 
 ### Developer Setup
 
-
 #### Opening the Simulink model
 
 ```matlab
@@ -39,7 +40,6 @@ The dashboard will be available at `http://localhost:5000`.
 >> open_system('udp_sine_gen');
 ```
 
-![](./static/simulink-model.png)
 
 #### Generating C++ code and building the portable binary
 ```matlab
