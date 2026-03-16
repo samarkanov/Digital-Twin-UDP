@@ -1,6 +1,8 @@
-# Digital Twin with Simulink, Embedded Coder and UDP communication
+# Digital Twin with Simulink, Simulink Coder 
 
 This project implements a portable Digital Twin (implemented in Simulink) that communicates over UDP with a Python-based components. It features a live data publisher, a subscriber, a digital twin, and a web dashboard for visualization. The application is deployed as a Docker composition.
+
+![](./static/main-rec.gif)
 
 ## Architecture
 
@@ -11,7 +13,10 @@ This project implements a portable Digital Twin (implemented in Simulink) that c
 
 ## Prerequisites
 
-- **Docker & Docker Compose**
+- Docker & Docker Compose to build the application
+- (Optional) MATLAB, Simulink to open Simulink model
+- (Optional) Instrument Control Toolbox to communicate over UDP
+- (Optional) Simulink Coder to build a binary
 
 ## Getting Started
 
@@ -25,8 +30,6 @@ The dashboard will be available at `http://localhost:5000`.
 ![](./static/recording.gif)
 
 ### Developer Setup
-
-Prerequisites: MATLAB, Simulink, Embedded Coder (for transforming Simulink model into a binary)
 
 
 #### Opening the Simulink model
