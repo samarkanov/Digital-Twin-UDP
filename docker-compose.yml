@@ -1,6 +1,6 @@
 services:
   publisher:
-    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-samrkanov}/udp-sse-publisher:${IMAGE_TAG:-latest}
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-samarkanov}/udp-sse-publisher:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: python/publisher/Dockerfile
@@ -13,7 +13,7 @@ services:
       - digital-twin-net
 
   subscriber:
-    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-samrkanov}/udp-sse-subscriber:${IMAGE_TAG:-latest}
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-samarkanov}/udp-sse-subscriber:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: python/subscriber/Dockerfile
@@ -27,7 +27,7 @@ services:
       - digital-twin-net
 
   dashboard:
-    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-samrkanov}/udp-sse-dashboard:${IMAGE_TAG:-latest}
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-samarkanov}/udp-sse-dashboard:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: python/dashboard/Dockerfile
@@ -43,7 +43,7 @@ services:
       - digital-twin-net
 
   digital-twin:
-    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-samrkanov}/udp-sse-digital-twin:${IMAGE_TAG:-latest}
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-samarkanov}/udp-sse-digital-twin:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: matlab/Dockerfile
