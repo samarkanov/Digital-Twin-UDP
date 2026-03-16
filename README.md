@@ -1,6 +1,6 @@
 # Digital Twin with Simulink, Embedded Coder and UDP communication
 
-This project implements a portable Digital Twin (implemented in Simulink) that communicates over UDP with a Python-based components. It features a live data publisher, a subscriber, a digital twin, and a web dashboard for visualization.
+This project implements a portable Digital Twin (implemented in Simulink) that communicates over UDP with a Python-based components. It features a live data publisher, a subscriber, a digital twin, and a web dashboard for visualization. The application is deployed as a Docker composition.
 
 ## Architecture
 
@@ -22,16 +22,34 @@ make up
 
 The dashboard will be available at `http://localhost:5000`.
 
-### 1. Developer Setup (Building from Source)
+![](./static/recording.gif)
 
-If you have MATLAB installed and want to build the Digital Twin binary locally:
+### Developer Setup
 
-```bash
-# Generate C++ code and build the portable binary
-make build
+Prerequisites: MATLAB, Simulink, Embedded Coder (for transforming Simulink model into a binary)
 
-# Start the services locally
-make up
+
+#### Opening the Simulink model
+
+```matlab
+>> openProject('.');
+>> open_system('udp_sine_gen');
+```
+
+![](./static/simulink-model.png)
+
+#### Generating C++ code and building the portable binary
+```matlab
+>> openProject('.');
+>> generate_cpp_code
+```
+
+#### Generating Simulink model from scratch
+You can regenerate the Simulink model with MATLAB script:
+
+```matlab
+>> openProject('.');
+>> create_udp_simulink_model
 ```
 
 ## Makefile Commands
