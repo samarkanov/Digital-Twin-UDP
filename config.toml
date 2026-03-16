@@ -1,0 +1,54 @@
+# Project Configuration
+
+[matlab]
+# Path to MATLAB shared libraries for RPATH linking.
+# If not set, the system will try to use the MATLAB_PATH environment variable.
+# library_path = "/home/dsamarka/prog/MATLAB/R2026a/bin/glnxa64"
+
+[network]
+# IP address and ports for UDP communication.
+# Used by both MATLAB (Simulink/Binary) and Python services.
+
+# Bind address for listeners (use 0.0.0.0 for Docker bridge network)
+bind_address = "0.0.0.0"
+
+# Target hostnames for senders (use service names for Docker bridge network)
+# Publisher and Dashboard send to Digital Twin
+target_digital_twin = "digital-twin"
+# Digital Twin sends to Subscriber
+target_subscriber = "subscriber"
+
+# Legacy/Default address (for local run without Docker)
+address = "127.0.0.1"
+
+receiver_port = 5005
+sink_port = 5006
+control_port = 5007
+
+[simulation]
+# The discrete time interval (in seconds) between simulation steps.
+# Used in:
+#  - Simulink: Block sample times and Solver fixed-step size.
+#  - C++ Binary: The base delay between step calls.
+#  - Python Publisher: The interval between sending offset packets.
+sample_time = 0.1
+
+# The multiplier for execution speed relative to real-time.
+#  - 1.0: Real-time speed.
+#  - 2.0: Double speed (simulates 1s of model time in 0.5s of wall-clock time).
+#  - 0.1: 10x slower than real-time.
+# Used in:
+#  - Simulink: Sets 'EnablePacing' and 'PacingRate' during simulation.
+#  - C++ Binary: Adjusts the 'usleep' delay in the patched main loop.
+pacing_rate = 1
+
+# Size of the fixed-length uint8 buffer used for JSON string transmission.
+json_buffer_size = 128
+
+[storage]
+# Path to the SQLite database file
+db_path = "shared_data/data.db"
+
+[dashboard]
+# Port for the Flask web server
+port = 5000

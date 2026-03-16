@@ -1,0 +1,56 @@
+services:
+  publisher:
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-samrkanov}/udp-sse-publisher:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: python/publisher/Dockerfile
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./config.toml:/app/config.toml
+    restart: unless-stopped
+    networks:
+      - digital-twin-net
+
+  subscriber:
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-samrkanov}/udp-sse-subscriber:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: python/subscriber/Dockerfile
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./config.toml:/app/config.toml
+      - ./shared_data:/app/shared_data
+    restart: unless-stopped
+    networks:
+      - digital-twin-net
+
+  dashboard:
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-samrkanov}/udp-sse-dashboard:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: python/dashboard/Dockerfile
+    environment:
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./config.toml:/app/config.toml
+      - ./shared_data:/app/shared_data
+    restart: unless-stopped
+    networks:
+      - digital-twin-net
+
+  digital-twin:
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-samrkanov}/udp-sse-digital-twin:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: matlab/Dockerfile
+    restart: unless-stopped
+    networks:
+      - digital-twin-net
+
+networks:
+  digital-twin-net:
+    driver: bridge

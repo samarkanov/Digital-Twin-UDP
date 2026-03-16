@@ -1,0 +1,19 @@
+# MATLAB/Simulink artifacts - ignore most but keep bld/ for Docker COPY
+# We allow bld/ so the binaries and libs can be copied into the image
+slprj/
+*_ert_rtw/
+*.slxc
+*.mex*
+
+# Exclude large cache/temp files inside bld/ but keep libs and binaries
+bld/slprj/
+bld/*_ert_rtw/
+bld/*.slxc
+
+# Python
+**/__pycache__/
+**/.venv/
+**/uv.lock
+
+# Git
+.git/

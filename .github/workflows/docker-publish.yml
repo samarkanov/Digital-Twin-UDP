@@ -1,0 +1,86 @@
+name: Docker Publish
+
+on:
+  push:
+    branches: [ "main" ]
+    tags: [ 'v*' ]
+
+env:
+  REGISTRY: ghcr.io
+  OWNER: samrkanov
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup MATLAB
+        uses: matlab-actions/setup-matlab@v2
+
+      - name: Generate C++ code and gathering dependencies
+        uses: matlab-actions/run-command@v2
+        with:
+          command: openProject('.'); generate_cpp_code
+
+      - name: Log into registry ${{ env.REGISTRY }}
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ env.REGISTRY }}/${{ env.OWNER }}/udp-sse-publisher
+            ${{ env.REGISTRY }}/${{ env.OWNER }}/udp-sse-subscriber
+            ${{ env.REGISTRY }}/${{ env.OWNER }}/udp-sse-dashboard
+            ${{ env.REGISTRY }}/${{ env.OWNER }}/udp-sse-digital-twin
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Publisher
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: python/publisher/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.OWNER }}/udp-sse-publisher:${{ steps.meta.outputs.version }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Build and push Subscriber
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: python/subscriber/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.OWNER }}/udp-sse-subscriber:${{ steps.meta.outputs.version }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Build and push Dashboard
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: python/dashboard/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.OWNER }}/udp-sse-dashboard:${{ steps.meta.outputs.version }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Build and push Digital Twin
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: matlab/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.OWNER }}/udp-sse-digital-twin:${{ steps.meta.outputs.version }}
+          labels: ${{ steps.meta.outputs.labels }}

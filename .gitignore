@@ -1,0 +1,30 @@
+# MATLAB/Simulink temporary files
+**/slprj/
+**/bld/
+**/*.slxc
+**/*.mex*
+**/*.log
+**/*.o
+**/*.mat
+JSONSerializer.m
+
+# Python/Environment
+**/__pycache__/
+**/.venv/
+**/.python-version
+**/uv.lock
+
+# Specific binaries
+udp_sine_gen*
+matlab/udp_sine_gen*
+
+# Simulink/MATLAB artifacts
+**/slprj/
+**/bld/
+**/*.slxc
+**/*.mex*
+**/*.log
+**/*.o
+**/*.mat
+JSONSerializer.m
+matlab/JSONSerializer.m

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UDP Telemetry Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --container-bg: #1e293b;
+            --text-color: #f8fafc;
+            --border-color: #334155;
+            --accent-color: #38bdf8;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f1f5f9;
+            --container-bg: #ffffff;
+            --text-color: #0f172a;
+            --border-color: #e2e8f0;
+            --accent-color: #0284c7;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            background: var(--container-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h2 { margin: 0; font-weight: 600; letter-spacing: -0.025em; color: var(--text-color); }
+
+        .controls {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .slider-container label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-color);
+            white-space: nowrap;
+        }
+
+        input[type="range"] {
+            cursor: pointer;
+            width: 120px;
+        }
+
+        #pressureValue {
+            font-family: monospace;
+            font-weight: bold;
+            min-width: 30px;
+            text-align: right;
+        }
+
+        select, button {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--container-bg);
+            color: var(--text-color);
+            font-size: 14px;
+            cursor: pointer;
+            outline: none;
+            font-weight: 500;
+        }
+
+        select:hover, button:hover {
+            border-color: var(--accent-color);
+        }
+
+        canvas { width: 100% !important; height: 450px !important; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Live Telemetry</h2>
+            <div class="controls">
+                <div class="slider-container">
+                    <label>Set Pressure</label>
+                    <input type="range" id="pressureSlider" min="0" max="100" value="0" step="1">
+                    <span id="pressureValue">0</span>
+                </div>
+                <select id="spanSelect">
+                    <option value="0.08333">5 Seconds</option>
+                    <option value="0.16667">10 Seconds</option>
+                    <option value="0.5">30 Seconds</option>
+                    <option value="1" selected>1 Minute</option>
+                    <option value="5">5 Minutes</option>
+                    <option value="15">15 Minutes</option>
+                </select>
+                <button id="themeToggle">Toggle Light Mode</button>
+            </div>
+        </div>
+        <canvas id="telemetryChart"></canvas>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('telemetryChart').getContext('2d');
+        
+        const getChartColors = () => {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            return {
+                grid: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.1)',
+                text: isDark ? '#ffffff' : '#0f172a',
+                line: '#38bdf8'
+            };
+        };
+
+        const telemetryChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'Sine Wave + Offset',
+                    data: [],
+                    borderColor: '#38bdf8',
+                    borderWidth: 1.5,
+                    backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                    tension: 0.2,
+                    fill: true,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#38bdf8',
+                    pointBorderWidth: 0,
+                    pointHoverRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: false,
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: { 
+                            unit: 'second', 
+                            displayFormats: { second: 'HH:mm:ss' }
+                        },
+                        grid: { color: getChartColors().grid },
+                        ticks: { 
+                            color: getChartColors().text, 
+                            font: { family: 'inherit', size: 12, weight: '500' } 
+                        },
+                        title: {
+                            display: true,
+                            text: 'Time',
+                            color: getChartColors().text,
+                            font: { family: 'inherit', size: 14, weight: '600' }
+                        }
+                    },
+                    y: {
+                        grid: { color: getChartColors().grid },
+                        ticks: { 
+                            color: getChartColors().text, 
+                            font: { family: 'inherit', size: 12, weight: '500' } 
+                        },
+                        title: {
+                            display: true,
+                            text: 'Value',
+                            color: getChartColors().text,
+                            font: { family: 'inherit', size: 14, weight: '600' }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { 
+                        labels: { 
+                            color: getChartColors().text, 
+                            font: { family: 'inherit', size: 14, weight: '600' },
+                            padding: 20
+                        } 
+                    }
+                }
+            }
+        });
+
+        let firstTimestamp = null;
+
+        async function fetchData() {
+            const span = document.getElementById('spanSelect').value;
+            try {
+                const response = await fetch(`/api/data?span=${span}`);
+                const rawData = await response.json();
+                
+                const formattedData = rawData.map(d => ({
+                    x: d.timestamp * 1000,
+                    y: d.value
+                }));
+
+                if (formattedData.length > 0) {
+                    if (firstTimestamp === null) firstTimestamp = formattedData[0].x;
+                    const latestTime = formattedData[formattedData.length - 1].x;
+                    const spanMs = parseFloat(span) * 60 * 1000;
+                    const max = Math.ceil(latestTime / 1000) * 1000;
+                    const min = Math.max(firstTimestamp, max - spanMs);
+                    telemetryChart.options.scales.x.min = min;
+                    telemetryChart.options.scales.x.max = Math.max(min + spanMs, max);
+                }
+
+                telemetryChart.data.datasets[0].data = formattedData;
+                telemetryChart.update('none'); 
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+
+        // Theme Toggle Logic
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            const html = document.documentElement;
+            const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            document.getElementById('themeToggle').textContent = newTheme === 'dark' ? 'Toggle Light Mode' : 'Toggle Dark Mode';
+            
+            const colors = getChartColors();
+            telemetryChart.options.scales.x.grid.color = colors.grid;
+            telemetryChart.options.scales.y.grid.color = colors.grid;
+            telemetryChart.options.scales.x.ticks.color = colors.text;
+            telemetryChart.options.scales.y.ticks.color = colors.text;
+            telemetryChart.options.scales.x.title.color = colors.text;
+            telemetryChart.options.scales.y.title.color = colors.text;
+            telemetryChart.options.plugins.legend.labels.color = colors.text;
+            telemetryChart.update();
+        });
+
+        // Poll every 100ms
+        setInterval(fetchData, 100);
+
+        // Pressure Slider Logic
+        const slider = document.getElementById('pressureSlider');
+        const display = document.getElementById('pressureValue');
+
+        slider.addEventListener('input', (e) => {
+            display.textContent = e.target.value;
+        });
+
+        slider.addEventListener('change', async (e) => {
+            const val = e.target.value;
+            try {
+                const response = await fetch('/api/set_pressure', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ value: val })
+                });
+                const result = await response.json();
+                console.log("Pressure updated:", result);
+            } catch (error) {
+                console.error("Error setting pressure:", error);
+            }
+        });
+    </script>
+</body>
+</html>
