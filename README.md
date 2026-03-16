@@ -8,7 +8,7 @@ This project implements a portable Digital Twin (implemented in Simulink) that c
 
 ## Architecture
 
-- **Digital Twin (MATLAB/Simulink)**: A compiled C++ binary generated in Simulink (with Embedded Coder) that simulates a sine wave generator with UDP input/output blocks.
+- **Digital Twin (MATLAB/Simulink)**: A compiled C++ binary generated in Simulink (with Simulink Coder) that simulates a sine wave generator with UDP input/output blocks.
 - **Publisher (Python)**: Sends input values to the Digital Twin Simulink model via UDP.
 - **Subscriber (Python)**: Receives the processed signal from the Digital Twin.
 - **Dashboard (Python/Flask)**: Visualizes the real-time data flow.
