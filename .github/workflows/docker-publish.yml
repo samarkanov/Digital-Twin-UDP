@@ -6,7 +6,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  OWNER: samrkanov
 
 jobs:
   build-and-push:
@@ -28,7 +27,7 @@ jobs:
 
       - name: Lowercase Owner Name
         run: |
-          echo "OWNER_LOWER=$(echo ${{ env.OWNER }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+          echo "OWNER_LOWER=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Download release asset
         env:
