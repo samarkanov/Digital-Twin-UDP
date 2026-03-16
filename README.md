@@ -64,3 +64,4 @@ You can regenerate the Simulink model with MATLAB script:
 | `make down` | Stops services and cleans up shared data. |
 | `make release TAG=v1.0.x` | Packages the local binary and creates a GitHub Release. |
 | `make clean` | Removes all build artifacts and Docker images. |
+
