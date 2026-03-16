@@ -26,6 +26,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Lowercase Owner Name
+        run: |
+          echo "OWNER_LOWER=$(echo ${{ env.OWNER }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
       - name: Download release asset
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -46,10 +50,10 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ env.REGISTRY }}/${{ env.OWNER }}/udp-sse-publisher
-            ${{ env.REGISTRY }}/${{ env.OWNER }}/udp-sse-subscriber
-            ${{ env.REGISTRY }}/${{ env.OWNER }}/udp-sse-dashboard
-            ${{ env.REGISTRY }}/${{ env.OWNER }}/udp-sse-digital-twin
+            ${{ env.REGISTRY }}/${{ env.OWNER_LOWER }}/udp-sse-publisher
+            ${{ env.REGISTRY }}/${{ env.OWNER_LOWER }}/udp-sse-subscriber
+            ${{ env.REGISTRY }}/${{ env.OWNER_LOWER }}/udp-sse-dashboard
+            ${{ env.REGISTRY }}/${{ env.OWNER_LOWER }}/udp-sse-digital-twin
           tags: |
             type=semver,pattern={{version}}
             type=raw,value=latest
@@ -60,7 +64,7 @@ jobs:
           context: .
           file: python/publisher/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.OWNER }}/udp-sse-publisher:${{ steps.meta.outputs.version }}
+          tags: ${{ env.REGISTRY }}/${{ env.OWNER_LOWER }}/udp-sse-publisher:${{ steps.meta.outputs.version }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Build and push Subscriber
@@ -69,7 +73,7 @@ jobs:
           context: .
           file: python/subscriber/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.OWNER }}/udp-sse-subscriber:${{ steps.meta.outputs.version }}
+          tags: ${{ env.REGISTRY }}/${{ env.OWNER_LOWER }}/udp-sse-subscriber:${{ steps.meta.outputs.version }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Build and push Dashboard
@@ -78,7 +82,7 @@ jobs:
           context: .
           file: python/dashboard/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.OWNER }}/udp-sse-dashboard:${{ steps.meta.outputs.version }}
+          tags: ${{ env.REGISTRY }}/${{ env.OWNER_LOWER }}/udp-sse-dashboard:${{ steps.meta.outputs.version }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Build and push Digital Twin
@@ -87,5 +91,5 @@ jobs:
           context: .
           file: matlab/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.OWNER }}/udp-sse-digital-twin:${{ steps.meta.outputs.version }}
+          tags: ${{ env.REGISTRY }}/${{ env.OWNER_LOWER }}/udp-sse-digital-twin:${{ steps.meta.outputs.version }}
           labels: ${{ steps.meta.outputs.labels }}
