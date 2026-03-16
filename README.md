@@ -60,7 +60,7 @@ You can regenerate the Simulink model with MATLAB script:
 | Command | Description |
 | :--- | :--- |
 | `make build` | Generates MATLAB code and gathers dependencies into `bld/`. |
-| `make up` | Starts the Docker composition (pulls from GHCR if `bld/` is missing). |
+| `make up` | Starts the Docker composition (pulls from GitHub). |
 | `make down` | Stops services and cleans up shared data. |
 | `make release TAG=v1.0.x` | Packages the local binary and creates a GitHub Release. |
 | `make clean` | Removes all build artifacts and Docker images. |
