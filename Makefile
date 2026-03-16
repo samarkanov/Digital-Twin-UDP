@@ -1,23 +1,34 @@
-# Makefile for managing the UDP-SSE Python services
+# Makefile for managing the UDP-SSE project
 
-.PHONY: build up down logs ps clean help
+.PHONY: build up down logs ps clean release help
 
 # Default target
 default: up
 
 help:
 	@echo "Available commands:"
-	@echo "  make build   - Build the Docker images"
-	@echo "  make up      - Start the services in detached mode (DEFAULT)"
-	@echo "  make down    - Stop and remove the services"
-	@echo "  make logs    - View the logs from the services"
-	@echo "  make ps      - List running services"
-	@echo "  make clean   - Remove Docker images and build artifacts"
-# Build everything: generate binary/libs locally, then build containers
+	@echo "  make build         - Build the MATLAB binary and gather dependencies"
+	@echo "  make up            - Start the services locally"
+	@echo "  make down          - Stop services and cleanup"
+	@echo "  make release TAG=v1.0.0 - Build, zip, and create a GitHub Release"
+	@echo "  make clean         - Remove Docker images and build artifacts"
+
+# Build everything: generate binary/libs locally
 build:
 	@echo "Generating C++ code and gathering dependencies locally..."
 	matlab-batch "openProject('.'); generate_cpp_code"
-	docker compose build
+
+# Create a release on GitHub (requires 'gh' CLI)
+release:
+	@if [ -z "$(TAG)" ]; then echo "Error: TAG is required. Use 'make release TAG=vX.Y.Z'"; exit 1; fi
+	@echo "Starting release process for $(TAG)..."
+	$(MAKE) build
+	@echo "Zipping build artifacts..."
+	zip -r bld.zip bld/
+	@echo "Creating GitHub Release and uploading bld.zip..."
+	gh release create $(TAG) bld.zip --title "Release $(TAG)" --notes "Automated release containing MATLAB binaries."
+	@rm bld.zip
+	@echo "Release $(TAG) created successfully!"
 
 up:
 	docker compose up -d
@@ -34,3 +45,4 @@ ps:
 
 clean:
 	docker compose down --rmi all --volumes --remove-orphans
+	rm -rf bld/
