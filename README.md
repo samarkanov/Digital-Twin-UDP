@@ -18,7 +18,7 @@ This project implements a portable Digital Twin (implemented in Simulink) that c
 - Docker & Docker Compose to build the application
 - (Optional) MATLAB, Simulink to open Simulink model
 - (Optional) Instrument Control Toolbox to communicate over UDP
-- (Optional) Simulink Coder to build a binary
+- (Optional) Simulink Coder, Embedded Coder to build a binary
 
 ## Getting Started
 
