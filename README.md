@@ -29,7 +29,7 @@ make up
 
 The dashboard will be available at `http://localhost:5000`.
 
-![](./static/recording-2.gif)
+![](./static/recording-4.gif)
 
 ### Developer Setup
 
