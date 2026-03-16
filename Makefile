@@ -30,8 +30,15 @@ release:
 	@rm bld.zip
 	@echo "Release $(TAG) created successfully!"
 
+# Start the services locally (pulls images by default, skips build if bld/ is missing)
 up:
-	docker compose up -d
+	@if [ ! -d "bld" ]; then \
+		echo "Notice: 'bld/' directory not found. Pulling images from GHCR..."; \
+		docker compose pull; \
+		docker compose up -d --no-build; \
+	else \
+		docker compose up -d; \
+	fi
 
 down:
 	docker compose down
