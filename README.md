@@ -2,6 +2,8 @@
 
 This project implements a portable Digital Twin (implemented in Simulink) that communicates over UDP with a Python-based components. It features a live data publisher, a subscriber, a digital twin, and a web dashboard for visualization. The application is deployed as a Docker composition.
 
+![](./static/simulink-udp-arch.svg)
+
 ![](./static/main-rec.gif)
 
 ![](./static/simulink-model.png)
