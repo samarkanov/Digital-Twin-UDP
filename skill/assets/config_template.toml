@@ -1,0 +1,22 @@
+# Project Configuration
+
+[network]
+# IP address and ports for UDP communication.
+bind_address = "0.0.0.0"
+target_digital_twin = "digital-twin"
+target_subscriber = "subscriber"
+address = "127.0.0.1"
+receiver_port = 5005
+sink_port = 5006
+control_port = 5007
+
+[simulation]
+sample_time = 0.1
+pacing_rate = 1
+json_buffer_size = 128
+
+[storage]
+db_path = "shared_data/data.db"
+
+[dashboard]
+port = 5000
