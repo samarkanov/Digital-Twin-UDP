@@ -46,6 +46,18 @@ services:
     networks:
       - digital-twin-net
 
+  #digital-twin:
+  #  image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-samarkanov}/udp-sse-digital-twin:${IMAGE_TAG:-latest}
+  #  build:
+  #    context: .
+  #    dockerfile: matlab/Dockerfile
+  #  ports:
+  #    - "0.0.0.0:5016:5016/udp"
+  #    - "0.0.0.0:5017:5017/udp"
+  #  restart: unless-stopped
+  #  networks:
+  #    - digital-twin-net
+
 networks:
   digital-twin-net:
     driver: bridge

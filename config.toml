@@ -14,9 +14,9 @@ bind_address = "0.0.0.0"
 
 # Target hostnames for senders (use service names for Docker bridge network)
 # Publisher and Dashboard send to Digital Twin
-target_digital_twin = "57.129.119.140"
+target_digital_twin = "digital-twin"
 # Digital Twin sends to Subscriber
-target_subscriber = "57.129.119.140"
+target_subscriber = "subscriber"
 
 # Legacy/Default address (for local run without Docker)
 address = "vps-f2ee6846.vps.ovh.net"

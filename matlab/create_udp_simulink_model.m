@@ -15,11 +15,12 @@ addpath(fullfile(projectRoot, 'utils'));
 cfg = ConfigReader();
 sampleTime = cfg.getValue('sample_time');
 
-% For Send blocks, prioritize the 'address' from config.toml as it contains the remote host (e.g., VPS)
-if cfg.hasKey('address')
-    udpAddr = cfg.getValue('address');
-elseif cfg.hasKey('target_subscriber')
+% For Send blocks, use target_subscriber if available, fallback to address.
+% In Docker, target_subscriber will be 'subscriber'.
+if cfg.hasKey('target_subscriber')
     udpAddr = cfg.getValue('target_subscriber');
+elseif cfg.hasKey('address')
+    udpAddr = cfg.getValue('address');
 else
     udpAddr = '127.0.0.1'; % Absolute fallback
 end
