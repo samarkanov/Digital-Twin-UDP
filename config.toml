@@ -14,16 +14,17 @@ bind_address = "0.0.0.0"
 
 # Target hostnames for senders (use service names for Docker bridge network)
 # Publisher and Dashboard send to Digital Twin
-target_digital_twin = "digital-twin"
+target_digital_twin = "57.129.119.140"
 # Digital Twin sends to Subscriber
-target_subscriber = "subscriber"
+target_subscriber = "57.129.119.140"
 
 # Legacy/Default address (for local run without Docker)
-address = "127.0.0.1"
+address = "vps-f2ee6846.vps.ovh.net"
 
-receiver_port = 5005
-sink_port = 5006
-control_port = 5007
+receiver_port = 5015
+sink_port = 5016
+control_port = 5017
+publisher_port = 5018
 
 [simulation]
 # The discrete time interval (in seconds) between simulation steps.

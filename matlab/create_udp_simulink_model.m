@@ -15,11 +15,21 @@ addpath(fullfile(projectRoot, 'utils'));
 cfg = ConfigReader();
 sampleTime = cfg.getValue('sample_time');
 
-% For Send blocks, use target_subscriber if available, fallback to address
-if cfg.hasKey('target_subscriber')
+% For Send blocks, prioritize the 'address' from config.toml as it contains the remote host (e.g., VPS)
+if cfg.hasKey('address')
+    udpAddr = cfg.getValue('address');
+elseif cfg.hasKey('target_subscriber')
     udpAddr = cfg.getValue('target_subscriber');
 else
-    udpAddr = cfg.getValue('address');
+    udpAddr = '127.0.0.1'; % Absolute fallback
+end
+
+% For Receive blocks, use bind_address (default 0.0.0.0) to listen on all interfaces.
+% This is essential for receiving data from Docker or other network hosts.
+if cfg.hasKey('bind_address')
+    bindAddr = cfg.getValue('bind_address');
+else
+    bindAddr = '0.0.0.0';
 end
 
 recvPort = cfg.getValue('receiver_port');
@@ -121,12 +131,17 @@ try
         'LocalPort', num2str(sinkPort), 'SampleTime', num2str(sampleTime), ...
         'DataSize', '1', 'OutputVariableSizeSignal', 'off', ...
         'Position', [50, 100, 150, 140]);
+    % For newer dspnetwork blocks, if LocalIPAddress exists:
+    try
+        set_param([modelName '/UDP_Sensor'], 'LocalIPAddress', bindAddr);
+    catch
+    end
 catch
     add_block('instrumentlib/UDP Receive', [modelName '/UDP_Sensor'], ...
         'LocalPort', num2str(sinkPort), 'DataSize', '1', 'DataType', 'double', ...
         'SampleTime', num2str(sampleTime), 'Position', [50, 100, 150, 140]);
     % Set correct mask parameters for Instrument Control Toolbox block
-    set_param([modelName '/UDP_Sensor'], 'LocalAddress', '0.0.0.0');
+    set_param([modelName '/UDP_Sensor'], 'LocalAddress', bindAddr);
     set_param([modelName '/UDP_Sensor'], 'EnableBlockingMode', 'off');
     set_param([modelName '/UDP_Sensor'], 'ByteOrder', 'little-endian');
     set_param([modelName '/UDP_Sensor'], 'GetLatestData', 'on');
@@ -138,11 +153,15 @@ try
         'LocalPort', num2str(controlPort), 'SampleTime', num2str(sampleTime), ...
         'DataSize', '1', 'OutputVariableSizeSignal', 'off', ...
         'Position', [50, 160, 150, 200]);
+    try
+        set_param([modelName '/UDP_SetPressure'], 'LocalIPAddress', bindAddr);
+    catch
+    end
 catch
     add_block('instrumentlib/UDP Receive', [modelName '/UDP_SetPressure'], ...
         'LocalPort', num2str(controlPort), 'DataSize', '1', 'DataType', 'double', ...
         'SampleTime', num2str(sampleTime), 'Position', [50, 160, 150, 200]);
-    set_param([modelName '/UDP_SetPressure'], 'LocalAddress', '0.0.0.0');
+    set_param([modelName '/UDP_SetPressure'], 'LocalAddress', bindAddr);
     set_param([modelName '/UDP_SetPressure'], 'EnableBlockingMode', 'off');
     set_param([modelName '/UDP_SetPressure'], 'ByteOrder', 'little-endian');
     set_param([modelName '/UDP_SetPressure'], 'GetLatestData', 'on');

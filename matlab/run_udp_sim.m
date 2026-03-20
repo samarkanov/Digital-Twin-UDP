@@ -1,10 +1,11 @@
 % Script to run the Simulink model for simulation
 modelName = 'udp_sine_gen';
 
-% Add current folder to path
+% Add current folder and utils to path
 scriptDir = fileparts(mfilename('fullpath'));
 projectRoot = fileparts(scriptDir);
 addpath(scriptDir);
+addpath(fullfile(projectRoot, 'utils'));
 
 % Ensure 'bld' directory exists and is set as the cache folder
 bldDir = fullfile(projectRoot, 'bld');

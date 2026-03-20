@@ -1,0 +1,76 @@
+%%{init: {
+  'theme': 'dark',
+  'themeVariables': {
+    'background': 'transparent',
+    'canvasBkgColor': 'transparent',
+    'primaryColor': '#00d4ff',
+    'primaryTextColor': '#fff',
+    'primaryBorderColor': '#00d4ff',
+    'lineColor': '#888',
+    'secondaryColor': '#b388ff',
+    'tertiaryColor': 'transparent',
+    'noteBkgColor': '#333',
+    'noteTextColor': '#00d4ff',
+    'actorBkg': '#1a1a1a',
+    'actorBorder': '#00d4ff',
+    'actorTextColor': '#fff',
+    'signalColor': '#00d4ff',
+    'signalTextColor': '#ccc',
+    'labelBoxBkgColor': '#1a1a1a',
+    'labelBoxBorderColor': '#00d4ff',
+    'loopTextColor': '#fff'
+  }
+}%%
+sequenceDiagram
+    autonumber
+    accTitle: Digital Twin Build & Deployment Lifecycle
+    accDescr: A sequence diagram showing the interaction between the User, Gemini AI, and the Environment across four phases.
+
+    participant U as 👤 USER
+    participant G as 🤖 GEMINI (AI)
+    participant T as 🛠️ TOOLS / ENV
+
+    Note over U, T: PHASE 1: INITIALIZATION & STRATEGY
+    U->>G: Request DT Ecosystem
+    G->>T: Activate Skill [digital-twin-builder]
+    T-->>G: Resources Loaded
+    
+    rect rgba(0, 212, 255, 0.05)
+        Note right of G: ENTER PLAN MODE
+        G->>T: Research & Strategy [Read workflow/patching]
+        G->>T: Write Implementation [Implementation Plan]
+        T-->>G: EXIT PLAN MODE
+    end
+
+    Note over U, T: PHASE 2: SCAFFOLDING & CODING
+    G->>T: Project Scaffold [mkdir, config.toml]
+    G->>T: Code Implementation [Python, Docker, CI/CD]
+    G-->>U: Scaffold Complete
+
+    Note over U, T: PHASE 3: BUILD & ITERATIVE DEBUGGING
+    U->>G: "Build & Start"
+    G->>T: MATLAB Inspection [Toolboxes, UDP blocks]
+    G->>T: Create Model (.slx) [Programmatic build]
+    G->>T: Run Build Script [Compilation attempt 1]
+    T-->>G: ❌ ERROR: Header missing
+
+    rect rgba(179, 136, 255, 0.1)
+        Note right of G: ITERATIVE DEBUGGING LOOP
+        G->>T: 16. Fix Include Paths
+        G->>T: 17. Fix Linking Paths
+        G->>T: 18. Fix Model Data Types
+        G->>T: 19. Patch Binary Symbols
+    end
+    
+    T-->>G: ✅ 20. BUILD SUCCESS (GMAKE)
+
+    Note over U, T: PHASE 4: DEPLOYMENT & NETWORK PATCHING
+    G->>T: Docker Orchestration [docker compose up]
+    G->>T: Verification [ps, logs, top]
+    G-->>U: Stack Running
+
+    U->>G: "No data plotted"
+    G->>T: Debug Logs (Buffer) [Python -u patch]
+    G->>T: Inspect Generated C++ [grep LibCreate]
+    G->>T: Fix Model Ports [5005 vs 25000]
+    G->>T: Patch Hostname [127.0.0.1 -> subscriber]

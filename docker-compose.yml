@@ -6,6 +6,8 @@ services:
       dockerfile: python/publisher/Dockerfile
     environment:
       - PYTHONUNBUFFERED=1
+    ports:
+      - "0.0.0.0:5018:5018/udp"
     volumes:
       - ./config.toml:/app/config.toml
     restart: unless-stopped
@@ -19,6 +21,8 @@ services:
       dockerfile: python/subscriber/Dockerfile
     environment:
       - PYTHONUNBUFFERED=1
+    ports:
+      - "0.0.0.0:5015:5015/udp"
     volumes:
       - ./config.toml:/app/config.toml
       - ./shared_data:/app/shared_data
@@ -34,19 +38,10 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
     ports:
-      - "5000:5000"
+      - "0.0.0.0:5000:5000"
     volumes:
       - ./config.toml:/app/config.toml
       - ./shared_data:/app/shared_data
-    restart: unless-stopped
-    networks:
-      - digital-twin-net
-
-  digital-twin:
-    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-samarkanov}/udp-sse-digital-twin:${IMAGE_TAG:-latest}
-    build:
-      context: .
-      dockerfile: matlab/Dockerfile
     restart: unless-stopped
     networks:
       - digital-twin-net
