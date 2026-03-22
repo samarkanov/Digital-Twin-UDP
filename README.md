@@ -1,12 +1,27 @@
 # Digital Twin with Simulink, Simulink Coder 
 
-This project implements a portable Digital Twin (implemented in Simulink) that communicates over UDP with a Python-based components. It features a live data publisher, a subscriber, a digital twin, and a web dashboard for visualization. The application is deployed as a Docker composition.
+This project implements a portable Digital Twin (implemented in Simulink) that communicates over UDP with a Python-based components. It features a live data publisher, a subscriber, a digital twin, and a web dashboard for visualization. The application is deployed as a Docker composition and includes a specialized agentic skill, `digital-twin-builder`, to assist in extending or rebuilding the ecosystem.
 
 ![](./static/simulink-udp-arch.svg)
 
 ![](./static/main-rec.gif)
 
 ![](./static/simulink-model.png)
+
+## Agentic Skill: Digital Twin Builder
+
+This project includes a built-in Gemini CLI skill designed to assist with the entire lifecycle of building, patching, and maintaining a hybrid digital twin ecosystem.
+
+To activate the skill within Gemini CLI:
+```bash
+/skill activate digital-twin-builder
+```
+
+The skill provides expert guidance and automated workflows for:
+- **MATLAB/Simulink**: Automated code generation, source-level path patching, and dependency gathering.
+- **Python Microservices**: Implementation of UDP communication with proper endianness (`>d`) and SSE-based dashboards.
+- **Containerization**: Specialized Docker patterns for portable MATLAB binaries and lightweight Python services.
+- **CI/CD**: Workflows for the "Local Build -> GitHub Release -> GHCR" deployment pattern.
 
 ## Architecture
 
