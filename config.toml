@@ -1,9 +1,9 @@
 # Project Configuration
 
 [matlab]
-# Path to MATLAB shared libraries for RPATH linking.
-# If not set, the system will try to use the MATLAB_PATH environment variable.
-# library_path = "/home/dsamarka/prog/MATLAB/R2026a/bin/glnxa64"
+#matlab_license_file = "/path/to/license2025b.lic" # Optional, an example:
+matlab_license_file = "/home/dsamarka/prog/scripts/license2025b.lic"
+
 
 [network]
 # IP address and ports for UDP communication.
@@ -17,9 +17,6 @@ bind_address = "0.0.0.0"
 target_digital_twin = "digital-twin"
 # Digital Twin sends to Subscriber
 target_subscriber = "subscriber"
-
-# Legacy/Default address (for local run without Docker)
-address = "vps-f2ee6846.vps.ovh.net"
 
 receiver_port = 5015
 sink_port = 5016

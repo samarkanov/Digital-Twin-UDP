@@ -2,10 +2,12 @@
 **/slprj/
 **/bld/
 **/*.slxc
+**/*.slxc.autosave
 **/*.mex*
 **/*.log
 **/*.o
 **/*.mat
+udp_sine_gen.slx
 
 # Python/Environment
 **/__pycache__/
@@ -13,14 +15,6 @@
 **/.python-version
 **/uv.lock
 
-# Simulink/MATLAB artifacts
-**/slprj/
-**/bld/
-**/*.slxc
-**/*.mex*
-**/*.log
-**/*.o
-**/*.mat
-
 # Database
 shared_data/
+.env

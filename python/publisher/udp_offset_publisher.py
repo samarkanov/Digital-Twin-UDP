@@ -19,8 +19,8 @@ def load_config():
 def main():
     config = load_config()
     
-    # Use target_digital_twin for sending, fallback to 'address'
-    UDP_IP = config["network"].get("target_digital_twin", config["network"]["address"])
+    # Use target_digital_twin for sending, fallback to '127.0.0.1'
+    UDP_IP = config["network"].get("target_digital_twin", "127.0.0.1")
     UDP_PORT = config["network"]["sink_port"]
     
     # Use bind_address for local binding

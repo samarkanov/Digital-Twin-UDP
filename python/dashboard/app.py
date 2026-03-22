@@ -69,8 +69,8 @@ def set_pressure():
     try:
         val = float(request.json.get('value', 0))
         config, _ = load_config()
-        # Use target_digital_twin for sending, fallback to 'address'
-        UDP_IP = config["network"].get("target_digital_twin", config["network"]["address"])
+        # Use target_digital_twin for sending, fallback to '127.0.0.1'
+        UDP_IP = config["network"].get("target_digital_twin", "127.0.0.1")
         UDP_PORT = config["network"]["control_port"]
 
         # Send via UDP to Simulink

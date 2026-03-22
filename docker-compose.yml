@@ -46,17 +46,44 @@ services:
     networks:
       - digital-twin-net
 
-  #digital-twin:
-  #  image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-samarkanov}/udp-sse-digital-twin:${IMAGE_TAG:-latest}
-  #  build:
-  #    context: .
-  #    dockerfile: matlab/Dockerfile
-  #  ports:
-  #    - "0.0.0.0:5016:5016/udp"
-  #    - "0.0.0.0:5017:5017/udp"
-  #  restart: unless-stopped
-  #  networks:
-  #    - digital-twin-net
+  digital-twin:
+    profiles: ["prod"]
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-samarkanov}/udp-sse-digital-twin:${IMAGE_TAG:-latest}
+    container_name: digital-twin
+    build:
+      context: .
+      dockerfile: matlab/Dockerfile
+    ports:
+      - "0.0.0.0:5016:5016/udp"
+      - "0.0.0.0:5017:5017/udp"
+    restart: unless-stopped
+    networks:
+      - digital-twin-net
+
+  digital-twin-dev:
+    profiles: ["dev-env"]
+    container_name: digital-twin-dev
+    build:
+      context: .
+      dockerfile: dev-env/Dockerfile
+      args:
+        - MATLAB_RELEASE=R2025b
+    ports:
+      - "0.0.0.0:5016:5016/udp"
+      - "0.0.0.0:5017:5017/udp"
+      - "127.0.0.1:8888:8888"
+    volumes:
+      - .:/home/matlab/project
+      - ${LICENSE_MOUNT}
+    environment:
+      - MLM_LICENSE_FILE=${MLM_LICENSE_FILE:-}
+      - MWI_USE_EXISTING_LICENSE=${MWI_USE_EXISTING_LICENSE:-False}
+      - MWI_ENABLE_TOKEN_AUTH=False
+    networks:
+      digital-twin-net:
+        aliases:
+          - digital-twin
+          - digital-twin-dev
 
 networks:
   digital-twin-net:

@@ -5,10 +5,10 @@
 bind_address = "0.0.0.0"
 target_digital_twin = "digital-twin"
 target_subscriber = "subscriber"
-address = "127.0.0.1"
-receiver_port = 5005
-sink_port = 5006
-control_port = 5007
+receiver_port = 5015
+sink_port = 5016
+control_port = 5017
+publisher_port = 5018
 
 [simulation]
 sample_time = 0.1

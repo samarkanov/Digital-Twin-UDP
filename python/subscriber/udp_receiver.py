@@ -33,8 +33,8 @@ def init_db(db_path):
 
 def main():
     config, base_dir = load_config()
-    # Use bind_address for listening, fallback to 'address'
-    UDP_IP = config["network"].get("bind_address", config["network"]["address"])
+    # Use bind_address for listening, fallback to '0.0.0.0'
+    UDP_IP = config["network"].get("bind_address", "0.0.0.0")
     UDP_PORT = config["network"]["receiver_port"]
     
     # Initialize Database
