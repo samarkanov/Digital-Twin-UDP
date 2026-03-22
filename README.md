@@ -17,6 +17,12 @@ To activate the skill within Gemini CLI:
 /skill activate digital-twin-builder
 ```
 
+### Prompting the Skill
+
+You can use the following prompt as a starting point to rebuild or extend the ecosystem:
+
+> "I want to build a real-time Digital Twin from scratch. Please use the digital-twin-builder skill to guide the process. The project should include a MATLAB/Simulink model that generates a portable C++ binary, Python microservices for publishing/subscribing via UDP, and a Flask dashboard with Server-Sent Events. Set up Docker Compose and a GitHub Actions workflow for a 'Local Build -> Release Asset' deployment strategy."
+
 The skill provides expert guidance and automated workflows for:
 - **MATLAB/Simulink**: Automated code generation, source-level path patching, and dependency gathering.
 - **Python Microservices**: Implementation of UDP communication with proper endianness (`>d`) and SSE-based dashboards.
